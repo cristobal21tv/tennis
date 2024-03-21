@@ -12,6 +12,10 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
       _bookings; // Getter para obtener los agendamientos
 
   String get clima => _clima;
+  set clima(value) {
+    _clima = value;
+    notifyListeners();
+  }
 
   String _messageError = "";
   String get messageError => _messageError;
@@ -19,10 +23,13 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
   // Método para cargar los agendamientos desde la base de datos
   Future<void> loadBookings() async {
     final db = await DatabaseConnection.instance.database;
-    //fetchData();
-    List<Map<String, dynamic>> queryResult = await db.query('bookings');
+    DateTime now = DateTime.now();
+    List<Map<String, dynamic>> queryResult = await db.rawQuery('''
+    SELECT * FROM bookings 
+    ORDER BY ABS(STRFTIME('%s', date) - STRFTIME('%s', '${now.year}-${now.month}-${now.day}'))
+  ''');
     _bookings = queryResult.map((e) => Booking.fromMap(e)).toList();
-    notifyListeners(); // Notifica a los widgets que están escuchando este provider que los datos han cambiado
+    notifyListeners();
   }
 
   // Método para insertar un nuevo agendamiento en la base de datos

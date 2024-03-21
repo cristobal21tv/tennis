@@ -16,8 +16,10 @@ class HomeScreen extends StatelessWidget {
           backgroundColor: ColoresGenerales.mainColor,
         ),
         body: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Container(
             // Asegúrate de que el contenido ocupe al menos el tamaño de la pantalla
+            padding: const EdgeInsets.all(16.0),
             constraints: BoxConstraints(
               minHeight: MediaQuery.of(context).size.height,
             ),
@@ -32,6 +34,7 @@ class HomeScreen extends StatelessWidget {
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
+            context.read<HomeProvider>().clima = "";
             // Mostrar la página de agregar agendamiento como un modal
             showModalBottomSheet(
               isScrollControlled: true,

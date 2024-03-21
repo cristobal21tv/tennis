@@ -26,7 +26,10 @@ class _AddBookingPageState extends State<AddBookingPage> {
     );
     if (picked != null && picked != selectedDate) {
       // Si el usuario selecciona una fecha, actualiza el estado del widger
-      _dateController.text = '${picked.day}/${picked.month}/${picked.year}';
+      var date = '${picked.day}/${picked.month}/${picked.year}';
+      await Provider.of<HomeProvider>(context, listen: false)
+          .obtenerPronostico(date);
+      _dateController.text = date;
     }
   }
 
@@ -80,7 +83,10 @@ class _AddBookingPageState extends State<AddBookingPage> {
                             true, // Hace que el campo de texto sea de solo lectura
                         onTap: () {
                           _selectDate(context);
-                          homeProvider.obtenerPronostico(_dateController.text);
+                        },
+                        onChanged: (value) {
+                          print('value');
+                          //homeProvider.obtenerPronostico(_dateController.text);
                         },
                         controller: _dateController,
                       ),
